@@ -19,7 +19,7 @@ var chromeProcess = new ChromeProcess();
 chromeProcess.SetToHeadlessMode();
 chromeProcess.SetArg("--no-sandbox");
 
-var started = _chromeProcess.Start();
+var started = chromeProcess.Start();
 
 
 var baseRemoteClient = await chromeProcess.CreateRemoteClientAsync();
