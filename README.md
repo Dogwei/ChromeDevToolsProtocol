@@ -52,6 +52,6 @@ var printToPDFResult = await targetClient.Page.PrintToPDFAsync(new PageDomain.Pr
     PrintBackground = true,
 
 
-}, cancellationToken: new CancellationTokenSource(PrintTimeout).Token);
+});
 
 ```
