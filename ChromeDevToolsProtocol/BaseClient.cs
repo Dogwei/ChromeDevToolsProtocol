@@ -71,7 +71,7 @@
         /// <typeparam name="TMessage">消息类型</typeparam>
         /// <param name="message">消息</param>
         /// <returns>返回消息字节码</returns>
-        internal protected abstract Memory<byte> SerializeMessage<TMessage>(TMessage message);
+        internal protected abstract byte[] SerializeMessage<TMessage>(TMessage message);
 
         /// <summary>
         /// 释放资源。

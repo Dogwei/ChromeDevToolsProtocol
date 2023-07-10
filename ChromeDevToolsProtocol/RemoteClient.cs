@@ -41,7 +41,7 @@ namespace ChromeDevToolsProtocol
         readonly Uri uri;
         readonly int bufferSize;
 
-        readonly ClientWebSocket client;
+        ClientWebSocket client;
         readonly ConcurrentDictionary<int, WaitingMessageCallback> waitingMessages;
         readonly IdMaker idMaker;
 
@@ -231,7 +231,7 @@ namespace ChromeDevToolsProtocol
         /// <param name="messageId">消息 Id</param>
         /// <param name="cancellationToken">可设置取消标志</param>
         /// <returns>返回响应消息</returns>
-        public async ValueTask<ResponseMessage<TResult>> WaitResponseMessageAsync<TResult>(int messageId, CancellationToken cancellationToken = default)
+        public async Task<ResponseMessage<TResult>> WaitResponseMessageAsync<TResult>(int messageId, CancellationToken cancellationToken = default)
         {
             if (receiveMessagesException != null)
             {
@@ -308,10 +308,7 @@ namespace ChromeDevToolsProtocol
                 throw receiveMessagesException;
             }
 
-            var messageBytes = JsonSerializer.SerializeToUtf8Bytes(
-                requestMessage,
-                JsonSerializerOptions
-                );
+            var messageBytes = SerializeMessage(requestMessage);
 
             await client.SendAsync(
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
@@ -394,8 +391,21 @@ namespace ChromeDevToolsProtocol
 
             receiveMessagesTask = null;
             receiveMessagesCancellationTokenSource = null;
+            receiveMessagesException = null;
 
-            await client.CloseAsync(WebSocketCloseStatus.Empty, null, cancellationToken);
+            try
+            {
+                if (client.State is WebSocketState.Connecting or WebSocketState.Open)
+                {
+                    await client.CloseAsync(WebSocketCloseStatus.Empty, null, cancellationToken);
+                }
+            }
+            finally
+            {
+                client.Dispose();
+
+                client = new();
+            }
         }
 
         /// <inheritdoc/>
@@ -405,7 +415,7 @@ namespace ChromeDevToolsProtocol
         }
 
         /// <inheritdoc/>
-        internal protected override Memory<byte> SerializeMessage<TMessage>(TMessage message)
+        internal protected override byte[] SerializeMessage<TMessage>(TMessage message)
         {
             return JsonSerializer.SerializeToUtf8Bytes(message, JsonSerializerOptions);
         }

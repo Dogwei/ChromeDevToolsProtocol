@@ -1,7 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -41,12 +38,12 @@ namespace ChromeDevToolsProtocol
 
             var response = await client.GetAsync($"{scheme}://{host}:{remoteDebuggingPort}/json/version", cancellationToken);
 
-           var versionJsonBytes = await response.Content.ReadAsByteArrayAsync(
+            var versionJsonBytes = await response.Content.ReadAsByteArrayAsync(
 
 #if NET5_0_OR_GREATER
                cancellationToken
 #endif
-               );
+                );
 
             var browserVersionInfo = JsonSerializer.Deserialize<BrowserVersionInfo>(versionJsonBytes);
 
@@ -161,8 +158,8 @@ namespace ChromeDevToolsProtocol
                 return await GetListeningUriFromRemoteDebuggingPort(intRemoteDebuggingPort, cancellationToken: new CancellationTokenSource(checked((int)millisecondsTimeout)).Token);
             }
 
-            return chromeProcess.HasArg(HeadlessArgName) ? await chromeProcess.GetListeningUriFromStandardErrorAsync(cancellationToken: new CancellationTokenSource(checked((int)millisecondsTimeout)).Token)
-                : chromeProcess.GetArgValue(UserDataDirArgName) is string userDataDir ? await GetListeningUriFromUserDataDirAsync(userDataDir, millisecondsTimeout: millisecondsTimeout)
+            return chromeProcess.GetArgValue(UserDataDirArgName) is string userDataDir ? await GetListeningUriFromUserDataDirAsync(userDataDir, millisecondsTimeout: millisecondsTimeout)
+                : chromeProcess.HasArg(HeadlessArgName) ? await chromeProcess.GetListeningUriFromStandardErrorAsync(cancellationToken: new CancellationTokenSource(checked((int)millisecondsTimeout)).Token)
                 : throw new NotSupportedException("Only supports process is --headless mode or with --user_data_dir specified.");
         }
 
