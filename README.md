@@ -1,6 +1,8 @@
 # ChromeDevToolsProtocol
 Chrome Devtools Protocol client implementation with full API. based Source Generator.
 
+### If you want to use ChromeDevToolsProtocol, please download or install the latest version on [Nuget](https://www.nuget.org/packages/ChromeDevToolsProtocol).
+
 #### Install Chrome on CentOS
 
 ```
