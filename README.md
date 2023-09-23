@@ -8,7 +8,7 @@ Chrome Devtools Protocol client implementation with full API. based Source Gener
 #### Advantages
 
 - Cross-platform.
-- No native libraries required.
+- No native libraries required(Except Chrome itself).
 - Contains all remote debugging APIs provided by Chrome.
 
 #### PrintToPdf
