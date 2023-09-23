@@ -2,15 +2,14 @@
 Chrome Devtools Protocol client implementation with full API. based Source Generator.
 
 ### If you want to use ChromeDevToolsProtocol, please download or install the latest version on [Nuget](https://www.nuget.org/packages/ChromeDevToolsProtocol).
-
-#### Install Chrome on CentOS
-
-```
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+### Please make sure your machine has the official Chrome program installed before use.
 
 
-yum install ./google-chrome-stable_current_x86_64.rpm
-```
+#### Advantages
+
+- Cross-platform.
+- No native libraries required.
+- Contains all remote debugging APIs provided by Chrome.
 
 #### PrintToPdf
 
@@ -29,10 +28,10 @@ var baseRemoteClient = await chromeProcess.CreateRemoteClientAsync();
 await baseRemoteClient.ConnectAsync();
 
 
-var targetClient = await baseRemoteClient.CreateTargetClientAsync(new TargetDomain.CreateTargetParams
+var targetClient = await baseRemoteClient.CreateTargetClientAsync(new ()
 {
 
-    Url = "file:///yourlocalfile.html",
+    Url = "yourhtmlfileurl.html",
 
 };
 
@@ -40,7 +39,7 @@ var targetClient = await baseRemoteClient.CreateTargetClientAsync(new TargetDoma
 await targetClient.ConnectAsync();
 
 
-var printToPDFResult = await targetClient.Page.PrintToPDFAsync(new PageDomain.PrintToPDFParams
+var printToPDFResult = await targetClient.Page.PrintToPDFAsync(new ()
 {
     PaperWidth = 4,
     PaperHeight = 6,
